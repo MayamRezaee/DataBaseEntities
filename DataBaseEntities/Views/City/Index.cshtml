@@ -1,0 +1,39 @@
+﻿@model IEnumerable<DataBaseEntities.Models.ViewModel.CityReadViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h5>The list of cities in Database</h5>
+
+<p>
+    <a asp-action="AddCity">Add City</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    <a asp-action="DeleteCity" asp-route-cityName="@item.name">Delete</a>
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

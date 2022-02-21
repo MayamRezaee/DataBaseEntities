@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Person>
+@{
+    ViewData["Title"] = "ListPeople";
+}
+
+<h5>The list of people in DataBase</h5>
+
+<p>
+<a asp-action="AddPerson">Add Person</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Country</th>
+            <th>City</th>
+            <th>PhoneNumber</th>
+            <th>Languages</th>
+            <th>Actions</th>
+
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Country.CountryName</td>
+            <td>@item.City.CityName</td>
+            <td>@item.PhoneNumber</td>
+            <td>@string.Join('-',item.LanguagePerson.Select(a => a.LanguageName))</td>
+
+            <td><a asp-action="DeletePerson" asp-route-id=@item.Id>Delete</a></td>
+        </tr>
+        }
+
+    </tbody>
+</table>

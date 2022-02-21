@@ -1,0 +1,88 @@
+﻿@using DataBaseEntities.Models.ViewModel
+@model PersonCreationViewModel
+@{
+    ViewData["Title"] = "AddPerson";
+}
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#chosenCountry").on("change", function () {
+                var chosenChountry = $("#chosenCountry").val();
+                $.ajax('/country/cities/' + chosenChountry,
+                    {
+                        dataType: 'json', // type of response data
+                        timeout: 2000,     // timeout milliseconds
+                        success: function (data, status, xhr) {   // success callback function
+                            var options = [];
+                            data.forEach(function (city) {
+                                options.push('<option value="'+city+'">'+city+'</option>');
+                            });
+                            $("#cityDropdown").html(options);
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) { // error callback 
+                            
+                        }
+                    });
+            });
+        });
+    </script>
+}
+
+<h1>Add Person</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddPerson" method="post">
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CountryName" class="control-label"></label>
+                <select id="chosenCountry" asp-for="CountryName" required>
+                    <option value="">none</option>
+                    @foreach (Country k in ViewBag.Countries)
+                    {
+                        <option value="@k.CountryName">@k.CountryName</option>
+                    }
+
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="CityName" class="control-label"></label>
+                <select id="cityDropdown" asp-for="CityName" required oninvalid="this.setCustomValidity('Enter User zName Here')"
+                        oninput="this.setCustomValidity('')">
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="LanguageName" class="control-label"></label>
+                <select asp-for="LanguageName" multiple>
+
+                    @foreach (Language l in ViewBag.Languages)
+                    {
+                        <option value="@l.LanguageName">@l.LanguageName</option>
+                    }
+                </select>
+
+
+                <div class="form-group">
+                    <label asp-for="PhoneNum" class="control-label"></label>
+                    <input asp-for="PhoneNum" class="form-control" required />
+                </div>
+
+
+
+            </div>
+            <input type="submit" value="Create" class="btn btn-primary" />
+
+
+        </form>
+    </div>
+</div>

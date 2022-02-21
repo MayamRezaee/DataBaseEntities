@@ -1,0 +1,28 @@
+﻿@model DataBaseEntities.Models.ViewModel.CountryViewModel
+@{
+    ViewData["Title"] = "AddCountry";
+}
+
+<h5>Add Country</h5>
+
+<div class="row">
+
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="AddCountry" method="post">
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value=" Add" class=" btn btn-primary" />
+                </div>
+            </form>
+
+
+        </div>
+
+</div>
+
+    </div>
+
