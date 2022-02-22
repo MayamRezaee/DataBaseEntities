@@ -1,10 +1,11 @@
 ﻿using DataBaseEntities.Models;
 using DataBaseEntities.Models.ViewModel;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataBaseEntities.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUSer>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -17,9 +18,12 @@ namespace DataBaseEntities.Data
         public DbSet<Language> Languages { get; set; }
         public DbSet<LanguagePerson> LanguagePerson { get; set; }
 
+        public DbSet<ApplicationUSer> Users { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<City>()
             .HasMany(c => c.People)
             .WithOne(e => e.City);
@@ -47,33 +51,9 @@ namespace DataBaseEntities.Data
                 .HasOne<Person>(sc => sc.Person)
                 .WithMany(s => s.LanguagePerson)
                 .HasForeignKey(sc => sc.PersonId);
+
+
                
-
-
-
-        /*    modelBuilder.Entity<Country>().HasData(
-       new Country
-       {
-           CountryName = "Iran",
-
-       });
-
-            modelBuilder.Entity<City>().HasData(new { CountryName = "Iran", CityName = "Tehran" },
-                new { CountryName = "Iran", CityName = "Isfahan" },
-                new { CountryName = "Iran", CityName = "Mashhad" },
-                new { CountryName = "Iran", CityName = "Kerman" });
-*/
-
-
-
-            /*modelBuilder.Entity<Country>().HasData(new Country { CountryName = "Iran" });
-            modelBuilder.Entity<Country>().HasData(new Country { CountryName = "Sweden" });
-            modelBuilder.Entity<Country>().HasData(new Country { CountryName = "France" });
-
-            modelBuilder.Entity<City>().HasData(new City { CityName = "Tehran" });
-            modelBuilder.Entity<City>().HasData(new City { CityName = "Tehran" });
-            modelBuilder.Entity<City>().HasData(new City { CityName = "Tehran" });
-*/
 
 
 

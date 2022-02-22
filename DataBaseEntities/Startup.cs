@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataBaseEntities.Data.Seeder;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using DataBaseEntities.Models;
 
 namespace DataBaseEntities
 {
@@ -32,10 +35,18 @@ namespace DataBaseEntities
             services.AddHttpContextAccessor();
             //services.AddSession();
 
+            services.AddRazorPages();
+
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<ISeeder,DbSeeder>();
+
+           // services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddIdentity<ApplicationUSer, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddDefaultUI()
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,7 +59,9 @@ namespace DataBaseEntities
 
             app.UseStaticFiles();
             app.UseRouting();
-            //app.UseSession();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
@@ -63,8 +76,12 @@ namespace DataBaseEntities
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}"
                     );
+
+
                 
             });
         }
     }
+
+    
 }
