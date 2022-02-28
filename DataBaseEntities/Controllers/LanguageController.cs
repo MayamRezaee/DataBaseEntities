@@ -1,6 +1,7 @@
 ﻿using DataBaseEntities.Data;
 using DataBaseEntities.Models;
 using DataBaseEntities.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,15 @@ namespace DataBaseEntities.Controllers
         {
             _context = context;
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
 
             return View(_context.Languages.Select(a=>new LanguageViewModel() { Name = a.LanguageName}).ToList());
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult AddLanguages()
         {
             return View();
@@ -39,6 +44,8 @@ namespace DataBaseEntities.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteLanguage(string languageName)
         {
             var languageToDelete = _context.Languages.FirstOrDefault(x => x.LanguageName == languageName);

@@ -1,5 +1,6 @@
 ﻿using DataBaseEntities.Data;
 using DataBaseEntities.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,12 +18,14 @@ namespace DataBaseEntities.Controllers
         {
             _context = context;
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
 
             return View(_context.Countries.Select(a=>new CountryViewModel { Name= a.CountryName}).ToList());
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult AddCountry()
         {
             return View();
@@ -46,7 +49,7 @@ namespace DataBaseEntities.Controllers
             IEnumerable<string> cityNames = chosenCountry.Cities.Select(a => a.CityName);
             return Ok(cityNames);
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteCountry(string countryName)
         {
             var countryToDelete = _context.Countries.FirstOrDefault(x => x.CountryName == countryName);

@@ -5,5 +5,24 @@
 <div class="text-center">
 
     <h5> Welcome to my Entity Framework Project </h5>
-    
+
 </div>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <h5> Welcome not logged in! </h5>
+}
+@if (User.Identity.IsAuthenticated)
+{
+    <h5> Welcome logged in! </h5>
+}
+
+@if (User.IsInRole("User"))
+{
+    <h5> Welcome user! </h5>
+}
+
+@if (User.IsInRole("Admin"))
+{
+    <h5> Welcome Admin! </h5>
+}

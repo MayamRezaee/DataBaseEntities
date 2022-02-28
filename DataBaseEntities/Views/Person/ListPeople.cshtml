@@ -36,6 +36,7 @@
             <td>@string.Join('-',item.LanguagePerson.Select(a => a.LanguageName))</td>
 
             <td><a asp-action="DeletePerson" asp-route-id=@item.Id>Delete</a></td>
+            <td><a asp-action="EditPerson" asp-route-id=@item.Id>Edit</a></td>
         </tr>
         }
 

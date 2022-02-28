@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+@using Microsoft.AspNetCore.Identity;
+
+
+@{
+    ViewData["Title"] = "Roles Index";
+}
+
+<h5>Roles</h5>
+
+<a asp-action="Create"> Create Role</a>
+
+<a asp-action="AddUserToRole"> Add user to role</a>
+
+<table class="table">
+    <theas>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+    </theas>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+
+
+<table class="table">
+    <theas>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </theas>
+    <tbody>
+        @foreach (IdentityUserRole<string> item in ViewBag.UserRoles)
+        {
+            <tr>
+                <td>@item.UserId</td>
+                <td>@item.RoleId</td>
+                <td>
+                    @*@if (item.RoleId != "Admin")*@
+                    <form asp-action="MakeAdmin" method="post">
+                        <input type="hidden" name="personId" value="@item.UserId" />
+                        <input type="submit" class="btn btn-primary" value="Make Admin">
+                    </form>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+

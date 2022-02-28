@@ -2507,7 +2507,7 @@
 
       // remove the popper if user expli
 
-      asked for the deletion on destroy
+    //asked for the deletion on destroy
     // do not use `remove` because IE11 doesn't support it
     if (this.options.removeOnDestroy) {
       this.popper.parentNode.removeChild(this.popper);

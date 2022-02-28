@@ -1,5 +1,6 @@
 ﻿using DataBaseEntities.Data;
 using DataBaseEntities.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace DataBaseEntities.Controllers
             _context = context;
         }
 
-        
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
 
@@ -25,6 +26,7 @@ namespace DataBaseEntities.Controllers
         }
 
         //Action for Adding City 
+        [Authorize(Roles = "Admin")]
         public IActionResult AddCity()
         {
             ViewBag.Countries = _context.Countries.ToList();
@@ -50,7 +52,7 @@ namespace DataBaseEntities.Controllers
         
             return RedirectToAction("Index");
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteCity(string cityName)
         {
             var cityToDelete = _context.Cities.FirstOrDefault(x => x.CityName == cityName);

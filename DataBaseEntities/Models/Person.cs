@@ -29,21 +29,6 @@ namespace DataBaseEntities.Models
 
         public IList<LanguagePerson> LanguagePerson { get; set; }
 
-
-
-
-
-
-
-
-
-        //{
-        //    listOfPeople = new List<Person> { new Person { Id = 1, FirstName = "Jonathan", LastName = "Krall", City = "Stenstorp" },
-        //new Person { Id = 2, FirstName = "Anders", LastName = "Andersson", City = "Anderstorp" },
-        //new Person { Id = 3, FirstName = "Anne", LastName = "Andersson", City = "Annelund" },
-        //new Person { Id = 4, FirstName = "Kim", LastName = "Kimsson", City = "Kimstad" } };
-        //    nextId = listOfPeople.Count + 1;
-        //}
     }
 
 

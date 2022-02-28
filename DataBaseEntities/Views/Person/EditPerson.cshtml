@@ -1,0 +1,123 @@
+﻿@model DataBaseEntities.Models.Person
+@using DataBaseEntities.Models.ViewModel;
+
+@{
+    ViewData["Title"] = "EditPerson";
+}
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#chosenCountry").on("change", function () {
+                var chosenChountry = $("#chosenCountry").val();
+                $.ajax('/country/cities/' + chosenChountry,
+                    {
+                        dataType: 'json', // type of response data
+                        timeout: 2000,     // timeout milliseconds
+                        success: function (data, status, xhr) {   // success callback function
+                            // body - status code
+                            var options = [];
+                            data.forEach(function (city) {
+                                options.push('<option value="'+city+'">'+city+'</option>');
+                            });
+                            $("#cityDropdown").html(options);
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) { // error callback
+
+                        }
+                    });
+            });
+        });
+    </script>
+}
+
+<h1>EditPerson</h1>
+
+<h4>Person</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditPerson">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Country" class="control-label"></label>
+                <select asp-for="Country" id="chosenCountry">
+                    <option value="">none</option>
+                    @foreach (CountryViewModel cvm in ViewBag.Countries)
+                    {
+                        if (Model.Country.CountryName == cvm.Name)
+                        {
+                            <option value="@cvm.Name" selected>@cvm.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@cvm.Name">@cvm.Name</option>
+                        }
+                    }
+                </select>
+                <!--<input asp-for="Country" class="form-control" />-->
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+
+                <select asp-for="City" id="cityDropdown">
+                    @foreach (string cityName in ViewBag.PersonCities)
+                    {
+                        if (Model.City.CityName == cityName)
+                        {
+                            <option value="@cityName" selected>@cityName</option>
+                        }
+                        else
+                        {
+                            <option value="@cityName">@cityName</option>
+                        }
+
+                    }
+                </select>
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LanguagePerson" class="control-label"></label>
+                <select asp-for="LanguagePerson">
+                    @foreach (LanguageViewModel language in ViewBag.Languages)
+                    {
+                        if (Model.LanguagePerson.Any(a=>a.LanguageName == language.Name))
+                        {
+                            <option value="@language.Name" selected>@language.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@language.Name">@language.Name</option>
+                        }
+
+                    }
+                </select>
+                <span asp-validation-for="LanguagePerson" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+

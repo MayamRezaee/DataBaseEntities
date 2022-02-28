@@ -16,8 +16,5 @@ namespace DataBaseEntities.Models.ViewModel
         public Country Country { get; set; }
         public List<Person> People { get; set;  }
 
-
-
-
     }
 }

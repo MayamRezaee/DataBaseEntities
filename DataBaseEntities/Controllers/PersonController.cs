@@ -8,7 +8,7 @@ using DataBaseEntities.Data;
 using DataBaseEntities.Models;
 using DataBaseEntities.Models.ViewModel;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace DataBaseEntities.Controllers
 {
@@ -19,23 +19,27 @@ namespace DataBaseEntities.Controllers
         {
             _context = context;
         }
+
+        [Authorize(Roles = "User, Admin")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize(Roles = "User, Admin")]
         public IActionResult ListPeople()
         {
             var cityLanguageCountry = _context.People
                 .Include(a => a.City)
                 .Include(k => k.Country)
-                .Include(a=>a.LanguagePerson)
+                .Include(a => a.LanguagePerson)
                 .ToList();
             //return View(_context.People.Include(a => a.City), (l => l.Language).ToList());
             return View(cityLanguageCountry);
 
         }
 
+        [Authorize(Roles = "User, Admin")]
         public IActionResult AddPerson()
         {
             ViewBag.Cities = _context.Cities.ToList();
@@ -48,18 +52,10 @@ namespace DataBaseEntities.Controllers
         {
             if (ModelState.IsValid)
             {
-                City city = _context.Cities.Where(a => a.CityName == person.CityName).Include(a=>a.People).FirstOrDefault();
-                // O O O O O O O O O O O O
-                //     b
-                // farsi english chinese france
+                City city = _context.Cities.Where(a => a.CityName == person.CityName).Include(a => a.People).FirstOrDefault();
+
                 IEnumerable<Language> languages = _context.Languages.Where(b => person.LanguageName.Contains(b.LanguageName));
                 Country country = _context.Countries.FirstOrDefault(k => k.CountryName == person.CountryName);
-                /*if(city == null)
-                {
-                    // log
-                    // statusCode = 422
-                    return UnprocessableEntity("What! from where do you bring city name!?");
-                }*/
 
 
                 Person p = new Person
@@ -74,9 +70,9 @@ namespace DataBaseEntities.Controllers
                 _context.SaveChanges();
 
                 Person insertedPerson = _context.People.FirstOrDefault(a => a.Name == p.Name);
-                
+
                 List<LanguagePerson> languagePerson = new List<LanguagePerson>();
-                foreach(var l in languages)
+                foreach (var l in languages)
                 {
                     languagePerson.Add(new LanguagePerson()
                     {
@@ -93,6 +89,8 @@ namespace DataBaseEntities.Controllers
 
             return RedirectToAction("ListPeople");
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult DeletePerson(int id)
         {
 
@@ -100,6 +98,38 @@ namespace DataBaseEntities.Controllers
             _context.People.Remove(personToDelete);
             _context.SaveChanges();
 
+            return RedirectToAction("ListPeople");
+        }
+
+        [Authorize(Roles = "User, Admin")]
+        public IActionResult EditPerson(int id)
+        {
+            var personToEdit = _context.People.Where(a=>a.Id == id).Include(a=>a.City).Include(b=>b.LanguagePerson).FirstOrDefault();
+            List<Country> countries = _context.Countries.ToList();
+            /*List<CountryViewModel> countriesViewModel = new List<CountryViewModel>();
+            foreach (var c in countries)
+            {
+                var newCountryViewModel = new CountryViewModel() { Name = c.CountryName};
+                countriesViewModel.Add(newCountryViewModel);
+            }*/
+
+            ViewBag.Languages = _context.Languages.Select(a=>new LanguageViewModel() { Name = a.LanguageName}).ToList();
+            ViewBag.Countries = countries.Select(a=>new CountryViewModel{ Name = a.CountryName}).ToList();
+            ViewBag.PersonCities = _context.Cities.Where(a => a.Country == personToEdit.Country).Select(a => a.CityName);
+            _context.People.Where(a => a.Id == id).FirstOrDefault();
+
+            return View(personToEdit);
+
+        }
+
+        [HttpPost]
+        public IActionResult EditPerson(Person ePerson)
+        {
+            _context.People.Update(ePerson);
+            _context.SaveChanges();
+            //var personToEdit = _context.People.Where(a => a.Id == ePerson.Id).FirstOrDefault();
+            //_context.People.Remove(personToEdit);
+            //_context.People.Add(ePerson);
             return RedirectToAction("ListPeople");
         }
     }
