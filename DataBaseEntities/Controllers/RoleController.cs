@@ -3,6 +3,7 @@ using DataBaseEntities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,20 +29,26 @@ namespace DataBaseEntities.Controllers
         public IActionResult Index()
         {
 
-            ViewBag.UserRoles = _dbContext.UserRoles.ToList();
             return View(_roleManager.Roles);
         }
 
 
-        [HttpPost]
-        public IActionResult MakeAdmin([FromForm] string personId) {
-            var userRole = _dbContext.UserRoles.FirstOrDefault(a => a.UserId == personId);
-            var role = _dbContext.Roles.FirstOrDefault(a => a.Name == "Admin");
-            userRole.RoleId = role.Id;
-            _dbContext.UserRoles.Remove(userRole);
-            _dbContext.Add(userRole);
-            _dbContext.SaveChanges();
-            return RedirectToAction("Index");
+        
+
+        public IActionResult MakeAdmin()
+        {
+            ViewData["Roles"] = new SelectList(_roleManager.Roles, "Name", "Name");
+            ViewData["Users"] = new SelectList(_userManager.Users, "Id", "UserName");
+            return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> MakeAdmin(string role, string user)
+        {
+            var _user = await _userManager.FindByIdAsync(user);
+
+            IdentityResult result = await _userManager.AddToRoleAsync(_user, role);
+            return RedirectToAction("Index");
+         }
     }
 }

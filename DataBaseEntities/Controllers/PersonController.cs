@@ -106,12 +106,7 @@ namespace DataBaseEntities.Controllers
         {
             var personToEdit = _context.People.Where(a=>a.Id == id).Include(a=>a.City).Include(b=>b.LanguagePerson).FirstOrDefault();
             List<Country> countries = _context.Countries.ToList();
-            /*List<CountryViewModel> countriesViewModel = new List<CountryViewModel>();
-            foreach (var c in countries)
-            {
-                var newCountryViewModel = new CountryViewModel() { Name = c.CountryName};
-                countriesViewModel.Add(newCountryViewModel);
-            }*/
+           
 
             ViewBag.Languages = _context.Languages.Select(a=>new LanguageViewModel() { Name = a.LanguageName}).ToList();
             ViewBag.Countries = countries.Select(a=>new CountryViewModel{ Name = a.CountryName}).ToList();
@@ -127,9 +122,6 @@ namespace DataBaseEntities.Controllers
         {
             _context.People.Update(ePerson);
             _context.SaveChanges();
-            //var personToEdit = _context.People.Where(a => a.Id == ePerson.Id).FirstOrDefault();
-            //_context.People.Remove(personToEdit);
-            //_context.People.Add(ePerson);
             return RedirectToAction("ListPeople");
         }
     }

@@ -10,7 +10,7 @@
 
 <a asp-action="Create"> Create Role</a>
 
-<a asp-action="AddUserToRole"> Add user to role</a>
+<a asp-action="MakeAdmin"> Add user to role</a>
 
 <table class="table">
     <theas>
@@ -33,31 +33,4 @@
 
 
 
-<table class="table">
-    <theas>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Action</th>
-        </tr>
-    </theas>
-    <tbody>
-        @foreach (IdentityUserRole<string> item in ViewBag.UserRoles)
-        {
-            <tr>
-                <td>@item.UserId</td>
-                <td>@item.RoleId</td>
-                <td>
-                    @*@if (item.RoleId != "Admin")*@
-                    <form asp-action="MakeAdmin" method="post">
-                        <input type="hidden" name="personId" value="@item.UserId" />
-                        <input type="submit" class="btn btn-primary" value="Make Admin">
-                    </form>
-                </td>
-            </tr>
-
-        }
-    </tbody>
-</table>
 
